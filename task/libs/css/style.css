@@ -1,0 +1,23 @@
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+.api-description {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.api-description input {
+    flex-grow: 1;
+}
+.results {
+    margin-top: 20px;
+}

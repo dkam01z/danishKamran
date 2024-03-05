@@ -1,98 +1,96 @@
 <!doctype html>
-
 <html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>AJAX/PHP/CURL/JSON example</title>
+    <meta name="description" content="AJAX/PHP/CURL/JSON example">
+    <meta name="author" content="Paddy Evans">
 
-	<head>
-
-		<meta charset="utf-8">
-
-		<title>AJAX/PHP/CURL/JSON example</title>
-		<meta name="description" content="AJAX/PHP/CURL/JSON example">
-		<meta name="author" content="Paddy Evans">
-
-	</head>
-
-	<body>
-
-		<select id="selCountry">
-			<option value="GB">Great Britain</option>
-			<option value="FR">France</option>
-			<option value="DE">Germany</option>
-			<option value="US">USA</option>
-		</select>
-
-		<select id="selLanguage">
-			<option value="en">English</option>
-			<option value="fr">Francais</option>
-			<option value="de">Deutsche</option>
-		</select>
-
-		<button id="btnRun">Run</button>
-
-		<br><br>
-
-		<div id="divResults">
-			
-			<table>
-
-				<tr>
-					<td align="right">
-						Continent: 
-					</td>
-					<td id="txtContinent">
-						
-					</td>
-
-				</tr>
-
-				<tr>
-					<td align="right">
-						Capital: 
-					</td>
-					<td id="txtCapital">
-						
-					</td>
-
-				</tr>
-
-				<tr>
-					<td align="right">
-						Languages: 
-					</td>
-					<td id="txtLanguages">
-						
-					</td>
-
-				</tr>
-
-				<tr>
-					<td align="right">
-						Population: 
-					</td>
-					<td id="txtPopulation">
-						
-					</td>
-
-				</tr>
-
-				<tr>
-					<td align="right">
-						Area (km<sup>2</sup>): 
-					</td>
-					<td id="txtArea">
-						
-					</td>
-
-				</tr>
+</head>
+<body>
 
 
-			</table>
+    <table>
+        <thead>
+            <tr>
+                <th>API name</th>
+                <th>API description</th>
+                <th></th> 
+            </tr>
+        </thead>
+        <tbody>
+			<tr>
+				<td>1. findNearbyPostalCodes</td>
+				<td class="api-description">
+				
+					<input type="text" name="postalcode" placeholder="Postal Code">
+					<input type="text" name="country" placeholder="Country (Use initials like UK)">
+					<input type="number" name="radius"  placeholder="Radius (KM)">
+					<input type="number" name="maxRows" placeholder="Max Rows (KM)">
+				</td>
+				<td>
+					<button type="button" id="submitApiRequest1">Submit</button>
+				</td>
 
-		</div>
+			</tr>	
+            <tr>
+                <td>2. Earthquakes <name></td>
+                <td class="api-description">
+                    <description>
+					<input type="number" name="north" placeholder="North (Co-ordinate)">
+					<input type="number" name="south" placeholder="South (Co-ordinate)">
+					<input type="number" name="east"  placeholder="East (Co-ordinate)">
+					<input type="number" name="west" placeholder="West (Co-ordinate)">
+                </td>
+                <td><button type="button" id="submitApiRequest2" >Submit</button></td>
+            </tr>
+            <tr>
+                <td>3. findNearByWeather <name></td>
+                <td class="api-description">
+                    <description>
+						<input type="number" name="lat" placeholder="Latitude (Co-ordinate)">
+						<input type="number" name="lng" placeholder="Longtitude (Co-ordinate)">
+          
+                </td>
+                <td><button type="button" id="submitApiRequest3">Submit</button></td>
+            </tr>
+        </tbody>
+    </table>
+	
+	<div class="results">
+		<strong>RESULTS</strong>
 
-		<script type="application/javascript" src="libs/js/jquery-2.2.3.min.js"></script>
-		<script type="application/javascript" src="libs/js/script.js"></script>
+		<table class="tablePostcode">
+			<tr>
+				<td id="rowOneHeading"></td>
+				<td id="rowOneResult"></td>
+			</tr>
+			<tr>
+				<td id="rowTwoHeading"></td>
+				<td id="rowTwoResult"></td>
+			</tr>
+			<tr>
+				<td id="rowThreeHeading"></td>
+				<td id="rowThreeResult"></td>
+			</tr>
+			<tr>
+				<td id="rowFourHeading"></td>
+				<td id="rowFourResult"></td>
+			</tr>
+			<tr>
+				<td id="rowFiveHeading"></td>
+				<td id="rowFiveResult"></td>
+			</tr>
+		</table>
+		
+		<p id="resultField"></p>
 
-	</body>
+	</div>
+	
 
+    <script type="application/javascript" src="libs/js/jquery-2.2.3.min.js"></script>
+	 <script type="application/javascript" src="libs/js/script.js"></script>
+	 <link href="./libs/css/style.css" rel="stylesheet">
+
+</body>
 </html>
