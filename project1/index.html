@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Gazetter</title>
+    <link rel="stylesheet" href="./css/leaflet.css" />
+    <link rel="stylesheet" href="./css/bootstrap.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/fontawesome.css" />
+    <script src="./js/leaflet.js"></script>
+
+</head>
+<body>
+    <div id="preloader"></div>
+    <div class="map-container">
+        
+        <div class="dropdown-container">
+            
+            <div class="dropdown">
+                <label for="CountrySelect"> </label>
+
+                <select id="CountrySelect" class="form-select">
+                 
+                </select>
+   
+            </div>
+        </div>
+        <div id="map"></div>
+
+
+     
+
+<div id="outside-buttons" >
+    <div class="d-flex flex-column">
+    <button id="btnModal1" type="button" class="btn btn-light mb-2"  data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <img src=""/>
+    </button>
+    <button id="btnModal2" type="button" class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+        s
+    </button>
+
+    <button id="btnModal2" type="button" class="btn btn-warning mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+        W
+    </button>
+
+    <button id="btnModal2" type="button" class="btn btn-info mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+        B
+    </button>
+
+    <button id="btnModal2" type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+        E
+    </button>
+</div>
+  </div>
+  
+ 
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Modal Title 1</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  Your modal 1 content here.
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save Changes</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+ 
+  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel2">Modal Title 2</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  Your modal 2 content here.
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save Changes</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+        
+    
+        
+
+
+    
+    
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/bootstrap.bundle.js"></script>
+    <script src="./js/moment.min.js"></script>
+    <script src="./js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+.map-container {
+    position: relative;
+}
+.dropdown-container {
+    position: absolute;
+    z-index: 1000; /* Ensure dropdown is above the map */
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Center dropdown horizontally */
+    padding: 10px 0; /* Adjust spacing */
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+
+html, body{
+    height: 100%;
+    width: 100vw;
+}
+
+.dropdown-menu {
+    max-height:200px;
+   
+ }
