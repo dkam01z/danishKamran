@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="./css/leaflet.css" />
     <link rel="stylesheet" href="./css/bootstrap.css" />
     <link rel="stylesheet" href="./css/style.css" />
-    <link rel="stylesheet" href="./css/fontawesome.css" />
+    <link rel="stylesheet" href="./css/all.min.css" />
+    <link rel="stylesheet" href="./css/MarkerCluster.css">
+    <link rel="stylesheet" href=".//css/easy-button.css">
+    <link rel="stylesheet" href="./css/leaflet.extra-markers.min.css">
+
     <script src="./js/leaflet.js"></script>
 
 </head>
@@ -23,85 +27,136 @@
                 <select id="CountrySelect" class="form-select">
                  
                 </select>
-   
+              
             </div>
+      
         </div>
         <div id="map"></div>
 
 
      
 
-<div id="outside-buttons" >
-    <div class="d-flex flex-column">
-    <button id="btnModal1" type="button" class="btn btn-light mb-2"  data-bs-toggle="modal" data-bs-target="#exampleModal">
-        <img src=""/>
-    </button>
-    <button id="btnModal2" type="button" class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-        s
-    </button>
 
-    <button id="btnModal2" type="button" class="btn btn-warning mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-        W
-    </button>
-
-    <button id="btnModal2" type="button" class="btn btn-info mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-        B
-    </button>
-
-    <button id="btnModal2" type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-        E
-    </button>
-</div>
-  </div>
   
  
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Modal Title 1</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  Your modal 1 content here.
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save Changes</button>
-              </div>
-          </div>
+<!-- Modal -->
+<div class="modal fade" id="countryInfoModal" tabindex="-1" aria-labelledby="countryInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content d-flex justify-content-center align-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="countryInfoModalLabel">Country Information</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped" id="countryInfoTable">
+            <tbody>
+              <tr >
+                <th>Name</th>
+                <td class="text-center"  id="countryName"></td>
+              </tr>
+              <tr>
+                <tr >
+                    <th>Capital</th>
+                    <td class="text-center"  id="capital"></td>
+                  </tr>
+                  <tr>
+                <th>Sub Region</th>
+                <td class="text-center" id="subRegion"></td>
+              </tr>
+              <tr>
+                <th>Currency</th>
+                <td class="text-center" id="currency"></td>
+              </tr>
+              <tr>
+                <th>Currency Code</th>
+                <td class="text-center" id="currencyCode"></td>
+              </tr>
+              <tr >
+                <th>Population</th>
+                <td class="text-center" id="population"></td>
+              </tr>
+              <tr >
+                <th>Calling Code</th>
+                <td class="text-center"  id="extensionCode"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
+    </div>
   </div>
   
- 
-  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
+  
+    <div class="modal fade" id="exchangeRateModal" tabindex="-1" role="dialog" aria-labelledby="exchangeRateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
               <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel2">Modal Title 2</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="countryInfoModalLabel">Country Exchange</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                  Your modal 2 content here.
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save Changes</button>
-              </div>
-          </div>
-      </div>
-  </div>
-  
+                <table class="table table-striped">
+                    <tbody><tr>
+                        <td>Updated On</td>
+                        <td id="exchangeupdatedon"></td>
+                    </tr>
         
+                    <tr>
+                        <td>From</td>
+                        <td id="currencyExchangeCode"></td>
+                    </tr>
+        
+                    <tr>
+                        <td>Amount (from 1 to 1,000,000)</td>
+                        <td><input type="number" id="fromamount" name="fromamount" min="1" max="1000000" value="1" step="1" class="form-control"></td>
+                    </tr>
+        
+                    <tr>
+                        <td>Convert to</td>
+
+                        <td>
+                            <select  class="form-select" id="currencySelect">
+
+                            </select>
+                        </td>
+
+                        
+                    </tr>
+        
+                    <tr>
+                        <td>Result</td>
+                        <td id="exchangeresults"></td>
+                    </tr>
+                </tbody></table>
+        
+            
+                <div class="d-grid gap-2 d-flex justify-content-center">
+                    <button type="reset" class="btn btn-warning" id="exchangeclear">Clear</button>
+                </div>
+        
+            </div>
+                
+            </div>
+          </div>
+    </div>
+
+
+    <table class="table caption-top" id="nearbywiki"></table>
     
         
 
 
     
-    
+   
     <script src="./js/jquery.min.js"></script>
+    <script src="./js/easy-button.js"></script>
     <script src="./js/bootstrap.bundle.js"></script>
     <script src="./js/moment.min.js"></script>
+    <script src="./js/leaflet.extra-markers.min.js"></script>
+    <script src="./js/leaflet.markercluster.js"></script>
     <script src="./js/script.js"></script>
 </body>
 </html>

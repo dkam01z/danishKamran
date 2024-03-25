@@ -1,0 +1,51 @@
+.leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
+	-webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
+	-moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
+	-o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+	transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+.leaflet-cluster-spider-leg {
+	/* stroke-dashoffset (duration and function) should match with leaflet-marker-icon transform in order to track it exactly */
+	-webkit-transition: -webkit-stroke-dashoffset 0.3s ease-out, -webkit-stroke-opacity 0.3s ease-in;
+	-moz-transition: -moz-stroke-dashoffset 0.3s ease-out, -moz-stroke-opacity 0.3s ease-in;
+	-o-transition: -o-stroke-dashoffset 0.3s ease-out, -o-stroke-opacity 0.3s ease-in;
+	transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
+}
+
+/* General style for all clusters */
+.marker-cluster {
+    border-radius: 50%;
+    border: none !important; /* Remove border if you don't need it */
+}
+
+/* Style for the number inside the cluster */
+.marker-cluster div {
+    width: auto; /* Set a specific width */
+    height: auto; /* Ensure the height is the same as the width for a circle */
+    line-height: 40px; 
+
+    border-radius: 50%; 
+    background-clip: padding-box; 
+
+    text-align: center;
+    font-size: auto;
+    font-weight: bold;
+    color: white;
+    background-color: rgba(255, 176, 0, 0.6);
+}
+
+
+.marker-cluster-small div {
+    background-color: rgba(110, 204, 57, 0.6);
+}
+
+/* Specific styles for medium clusters */
+.marker-cluster-medium div {
+    background-color: rgba(240, 194, 12, 0.6);
+}
+
+/* Specific styles for large clusters */
+.marker-cluster-large div {
+    background-color: rgba(241, 128, 23, 0.6);
+}
