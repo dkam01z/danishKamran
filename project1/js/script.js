@@ -1,5 +1,6 @@
 const apiKey = "7b42934456e241e3b28e4b9a7bd9df33";
-const exchangeAPIKey = '554d89ca95967dd8c7a603a5'
+const exchangeAPIKey = "554d89ca95967dd8c7a603a5";
+const weatherAPI = "107e1db8180a432d922171836242803";
 
 $(window).on("load", function () {
   if ($("#preloader").length) {
@@ -50,8 +51,9 @@ let map = L.map("map", {
 
 var baseLayers = {
   "Satellite View": googleSatellite,
-  Roadmap: googleRoadmap,
   "Default Map": defaultMap,
+  Roadmap: googleRoadmap,
+  
 };
 
 var earthquakeIcon = L.ExtraMarkers.icon({
@@ -61,7 +63,6 @@ var earthquakeIcon = L.ExtraMarkers.icon({
   prefix: "fa",
 });
 
-
 var citiesIcon = L.ExtraMarkers.icon({
   icon: "fa-building",
   markerColor: "green",
@@ -69,7 +70,7 @@ var citiesIcon = L.ExtraMarkers.icon({
   prefix: "fa",
 });
 
-weatherIcon =  L.ExtraMarkers.icon({
+weatherIcon = L.ExtraMarkers.icon({
   icon: "fa-cloud-bolt",
   markerColor: "yellow",
   shape: "square",
@@ -85,7 +86,6 @@ var earthquakes = L.markerClusterGroup({
     fillOpacity: 0.5,
   },
 }).addTo(map);
-
 
 var cities = L.markerClusterGroup({
   polygonOptions: {
@@ -117,12 +117,19 @@ var weather_Observations = L.markerClusterGroup({
   },
 }).addTo(map);
 
-
 let markerLayers = {
   Earthquakes: earthquakes,
   Wiki: wiki,
   Cities: cities,
-  Weather_Observations: weather_Observations
+  Weather_Observations: weather_Observations,
+};
+const weatherBackgrounds = {
+  'clear': 'clear.gif',
+  'fog': 'fog.gif',
+  'rain': 'rain.gif',
+  'cloudy': 'clouds.gif',
+  'snow': 'snow.gif',
+  
 };
 
 L.control.layers(baseLayers, markerLayers).addTo(map);
@@ -175,7 +182,6 @@ var polygonGroup = L.layerGroup().addTo(map);
 var countryCode;
 
 function getCities(selectedIso) {
-
   $.ajax({
     url: "php/getCities.php",
     type: "GET",
@@ -183,7 +189,6 @@ function getCities(selectedIso) {
     data: {
       countryCode: selectedIso,
     },
-
 
     success: function (response) {
       var responseData = response.geonames;
@@ -194,7 +199,7 @@ function getCities(selectedIso) {
 
         let cityPopulation = formatPopulation(responseData[i].population);
         L.marker([cityLat, cityLng], {
-          icon: citiesIcon
+          icon: citiesIcon,
         })
           .bindTooltip(
             "<div class='col text-center'><strong>" +
@@ -211,7 +216,7 @@ function getCities(selectedIso) {
   });
 }
 
-function getEarthQuakes(east,west,north,south) {
+function getEarthQuakes(east, west, north, south) {
   $.ajax({
     url: "php/getCountryEarthquakes.php",
     type: "GET",
@@ -231,10 +236,9 @@ function getEarthQuakes(east,west,north,south) {
         let earthquakeLng = data[i].lng;
         let earthquakeMagnitude = data[i].magnitude;
         let earthquakeTime = data[i].datetime;
-        let formattedTime =
-          moment(earthquakeTime).format("MMMM Do, YYYY");
+        let formattedTime = moment(earthquakeTime).format("MMMM Do, YYYY");
 
-          L.marker([earthquakeLat, earthquakeLng], {icon: earthquakeIcon})
+        L.marker([earthquakeLat, earthquakeLng], { icon: earthquakeIcon })
           .bindTooltip(
             `<div class='bootstrap-tooltip card'>
               <div class='card-body'>
@@ -245,11 +249,9 @@ function getEarthQuakes(east,west,north,south) {
                 </p>
               </div>
             </div>`,
-            { className: 'bootstrap-tooltip', direction: "top", sticky: true }
+            { className: "bootstrap-tooltip", direction: "top", sticky: true }
           )
           .addTo(earthquakes);
-        
-        
       }
     },
   });
@@ -257,7 +259,7 @@ function getEarthQuakes(east,west,north,south) {
 
 function weatherObservations(east, west, north, south) {
   $.ajax({
-    url: 'php/weatherObservations.php',
+    url: "php/weatherObservations.php",
     type: "GET",
     dataType: "JSON",
     data: {
@@ -266,20 +268,19 @@ function weatherObservations(east, west, north, south) {
       north: north,
       south: south,
     },
-    success: function(response) {
+    success: function (response) {
       var weatherData = response.weatherObservations;
       for (let i = 0; i < weatherData.length; i++) {
-  
         var weatherLat = weatherData[i].lat;
         var weatherLng = weatherData[i].lng;
         var weatherStation = weatherData[i].stationName;
         var weatherTemp = weatherData[i].temperature;
         var weatherClouds = weatherData[i].clouds;
-        var Observation = weatherData[i].observation
+        var Observation = weatherData[i].observation;
         var weatherDateTime = weatherData[i].datetime;
 
         L.marker([weatherLat, weatherLng], {
-          icon: weatherIcon
+          icon: weatherIcon,
         })
           .bindTooltip(
             `<div class='card border-0 shadow-sm'>
@@ -293,117 +294,208 @@ function weatherObservations(east, west, north, south) {
                 </p>
               </div>
             </div>`,
-            { className: 'bootstrap-tooltip', direction: "top", sticky: true }
+            { className: "bootstrap-tooltip", direction: "top", sticky: true }
           )
           .addTo(weather_Observations);
       }
-    }
+    },
   });
 }
 
-
 function updateConversionResult(conversionRate) {
-  var amount = $('#fromamount').val();
+  var amount = $("#fromamount").val();
   var calculateConversion = amount * conversionRate;
-  $('#exchangeresults').text(calculateConversion.toFixed(2)); // Show results with 2 decimal places
+  $("#exchangeresults").text(calculateConversion.toFixed(2)); // Show results with 2 decimal places
 }
 
 function countryExchange(currencyCode) {
   $.ajax({
-    url: 'php/countryExchange.php',
-    dataType: 'JSON', 
-    type: 'GET',
+    url: "php/countryExchange.php",
+    dataType: "JSON",
+    type: "GET",
     data: {
       apiKey: exchangeAPIKey,
-      currencyCode: currencyCode 
+      currencyCode: currencyCode,
     },
-    success: function(response) {
+    success: function (response) {
       var lastUpdated = response.data.time_last_update_utc;
       var conversionRates = response.data.conversion_rates;
-      
-      $('#currencySelect').empty();
-      $.each(conversionRates, function(code, rate) {
-        $('#currencySelect').append($('<option>').text(code).attr('value', code));
+
+      $("#currencySelect").empty();
+      $.each(conversionRates, function (code, rate) {
+        $("#currencySelect").append(
+          $("<option>").text(code).attr("value", code)
+        );
       });
 
-      $('#exchangeupdatedon').text(lastUpdated);
-      $('#currencyExchangeCode').text(currencyCode);
+      $("#exchangeupdatedon").text(lastUpdated);
+      $("#currencyExchangeCode").text(currencyCode);
 
-
-      $('#currencySelect').change(function() {
+      $("#currencySelect").change(function () {
         var selectedCurrency = $(this).val();
         var conversionRate = conversionRates[selectedCurrency];
-        updateConversionResult(conversionRate); 
+        updateConversionResult(conversionRate);
       });
 
- 
-      $('#fromamount').on('input', function() {
-        var selectedCurrency = $('#currencySelect').val();
+      $("#fromamount").on("input", function () {
+        var selectedCurrency = $("#currencySelect").val();
         var conversionRate = conversionRates[selectedCurrency];
-        updateConversionResult(conversionRate); 
+        updateConversionResult(conversionRate);
       });
 
-    
-      $('#currencySelect').trigger('change');
+      $("#currencySelect").trigger("change");
     },
-    error: function(error) {
+    error: function (error) {
       console.error(error);
-    }
+    },
   });
 }
-
 
 function formatPopulation(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-
 function getCountryInfo(countryCode) {
   $.ajax({
-    url: 'php/getCountryInfo.php',
+    url: "php/getCountryInfo.php",
     type: "GET",
     dataType: "JSON",
     data: {
-      countryCode: countryCode
+      countryCode: countryCode,
     },
-    success: function(response) {
+    success: function (response) {
       var data = response;
-      var countryName = data.name; 
+      var countryName = data.name;
       var subRegion = data.subregion;
-      var currency = data.currencies[0].name; 
-      var currencyCode = data.currencies[0].code
-      var population = formatPopulation(data.population); 
-      var extensionCode = data.callingCodes; 
+      var currency = data.currencies[0].name;
+      var currencyCode = data.currencies[0].code;
+      var population = formatPopulation(data.population);
+      var extensionCode = data.callingCodes;
       var capital = data.capital;
 
-      $("#currencyCode").html(currencyCode)
+      $("#currencyCode").html(currencyCode);
       $("#countryName").text(countryName);
       $("#subRegion").text(subRegion);
       $("#currency").text(currency);
       $("#population").text(population);
       $("#capital").text(capital);
-      $("#extensionCode").text('+' + extensionCode);
+      $("#extensionCode").text("+" + extensionCode);
 
+      $("#information").on("click", function () {
+        $("#countryInfoModal").modal("show");
+      });
 
-      $('#information').on('click', function() {
-        $('#countryInfoModal').modal('show');
-      })
+      countryExchange(currencyCode);
+      weatherData(capital);
+    },
+  });
+}
+
+function weatherData(capital) {
+  $.ajax({
+    url: 'php/getWeatherData.php',
+    type: "GET",
+    dataType: "JSON",
+    data: {
+      capital: capital.replace(/'/g, "").normalize("NFD"),
+      apiKey: weatherAPI,
+    },
+    success: function(response) {
+     
+    
+      console.log(response)
+      
+      
+      var location = response.location;
+      var current = response.current;
+      var forecast = response.forecast.forecastday;
+
+      var country = location.country;
+      var city = location.name;
+      var currentTemp = current.temp_c;
+      var currentCondition = current.condition.text;
+      var currentImg = current.condition.icon;
+
+   
+      $('.cityTitle').text(`${city}, ${country}`);
+      $('#currentWeatherIcon').attr('src', `https:${currentImg}`); 
+      $('.currentTemp').text(`${currentTemp}°C`);
+      $('.currentCondition').text(`${currentCondition}`);
 
     
-      countryExchange(currencyCode);
+      updateWeatherBackground(currentCondition.toLowerCase());
+
+    
+      forecast.forEach((day, index) => {
+        if (index === 0) { 
+          return;
+        }
+
+       
+        $(`#forecastDay${index} .forecastTemp`).text(`${day.day.avgtemp_c}°C`);
+        $(`#forecastDay${index} .forecastCondition`).text(day.day.condition.text);
+        $(`#forecastDay${index} .forecastIcon`).attr('src', `https:${day.day.condition.icon}`);
+
+        
       
+      });
+    },
+    error: function(error) {
+      console.error("Error fetching weather data: ", error);
     }
   });
 }
 
-function nearbyWikipedia() {
-  $.ajax({
-    url: 'php/findNearbyWikipedia.php',
-    
-  })
+function updateWeatherBackground(description) {
+  let backgroundImg = 'default.gif'; 
+  for (const [key, value] of Object.entries(weatherBackgrounds)) {
+    if (description.toLowerCase().includes(key)) {
+      backgroundImg = value;
+      break; 
+    }
+  }
+
+  $('.weather-content').css('background-image', `url('css/images/${backgroundImg}')`);
 }
 
 
+function nearbyWikipedia(east, west, north, south) {
+  $.ajax({
+    url: "php/countryWiki.php",
+    method: "GET",
+    data: {
+      east: east,
+      west: west,
+      north: north,
+      south: south,
+    },
+    dataType: "json",
+    success: function (response) {
+    
+        var geonames = response;
+        const listContainer = $('#wikipediaArticlesList');
+        listContainer.empty();
+
+        for (let i = 0; i < geonames.length; i++) { 
+          var title = geonames[i].title;
+          var summary = geonames[i].summary;
+          var articleUrl = `https://${geonames[i].wikipediaUrl}`; 
+
+          const articleElement = $(`
+              <a href="${articleUrl}" target="_blank" class="list-group-item list-group-item-action my-3">
+                <h5 class="articleTitle">${title}</h5>
+                <p class="articleDescription">${summary}</p>
+              </a>
+          `);
+          listContainer.append(articleElement);
+        }
+      
+    },
+    error: function (error) {
+      console.error(error);
+    }
+  });
+}
 
 
 $(document).ready(function () {
@@ -420,17 +512,16 @@ $(document).ready(function () {
 
   $("#CountrySelect").change(function () {
     var selectedIso = $(this).val();
+    polygonGroup.clearLayers();
+    earthquakes.clearLayers();
+    cities.clearLayers();
+    weather_Observations.clearLayers();
 
     $.getJSON(
       "php/getCountryBorders.php",
       { isoCode: selectedIso },
       function (selectedFeature) {
         if (!selectedFeature.error) {
-          polygonGroup.clearLayers();
-          earthquakes.clearLayers();
-          cities.clearLayers();
-          weather_Observations.clearLayers();
-
           var geometryType = selectedFeature.geometry.type;
           var coords = selectedFeature.geometry.coordinates;
           var latLngs = coords[0].map((coord) => [coord[1], coord[0]]);
@@ -440,9 +531,10 @@ $(document).ready(function () {
             );
           }
 
-          var polygon = L.polygon(latLngs, { opacity: 0.5, color: "blue" }).addTo(
-            polygonGroup
-          );
+          var polygon = L.polygon(latLngs, {
+            opacity: 0.5,
+            color: "blue",
+          }).addTo(polygonGroup);
           var bounds = polygon.getBounds();
           map.fitBounds(bounds);
 
@@ -451,33 +543,29 @@ $(document).ready(function () {
           let north = bounds.getNorth();
           let south = bounds.getSouth();
 
-      
-
-          getEarthQuakes(east,west,north,south)
+          getEarthQuakes(east, west, north, south);
           getCities(selectedIso);
           weatherObservations(east, west, north, south);
           getCountryInfo(selectedIso);
-
-
- 
-
-
+          nearbyWikipedia(east, west, north, south);
         }
       }
     );
   });
 });
 
-
-L.easyButton('fa-solid fa-info blue', function(btn, map){
-  $('#countryInfoModal').modal('show');
+L.easyButton("fa-solid fa-info blue", function (btn, map) {
+  $("#countryInfoModal").modal("show");
 }).addTo(map);
 
-
-L.easyButton('fa-solid fa-dollar-sign', function(btn, map){
-  $('#exchangeRateModal').modal('show');
+L.easyButton("fa-solid fa-dollar-sign", function (btn, map) {
+  $("#exchangeRateModal").modal("show");
 }).addTo(map);
 
-L.easyButton('fa-brands fa-wikipedia-w', function(btn, map){
-  $('').modal('show');
+L.easyButton("fa-brands fa-wikipedia-w", function (btn, map) {
+  $("#wikipediaModal").modal("show");
+}).addTo(map);
+
+L.easyButton("fa-solid fa-sun", function (btn, map) {
+  $("#weatherModal").modal("show");
 }).addTo(map);

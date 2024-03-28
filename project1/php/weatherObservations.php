@@ -29,5 +29,7 @@ curl_close($ch);
 
 
 echo json_encode($decoded);
+$executionEndTime = microtime(true) / 1000;
+$executionTime = ($executionEndTime - $executionStartTime) . ' seconds';
 
 ?>

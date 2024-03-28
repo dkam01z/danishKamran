@@ -16,7 +16,7 @@
 
 </head>
 <body>
-    <div id="preloader"></div>
+    
     <div class="map-container">
         
         <div class="dropdown-container">
@@ -36,7 +36,7 @@
 
      
 
-
+<div id="preloader"></div>
   
  
 <!-- Modal -->
@@ -143,11 +143,61 @@
           </div>
     </div>
 
-
-    <table class="table caption-top" id="nearbywiki"></table>
+    <div class="modal fade" id="wikipediaModal" tabindex="-1" role="dialog" aria-labelledby="wikipediaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="wikipediaModalLabel">Wikipedia Articles</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div id="wikipediaArticlesList" class="list-group">
+    
+                
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    
     
         
 
+<div class="modal fade" id="weatherModal" tabindex="-1" role="dialog" aria-labelledby="weatherModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content weather-content text-white">
+      <div class="modal-header border-0">
+        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <h2 class="cityTitle" id="weatherModalLabel"></h2>
+        <h3 class="currentCondition"></h3>
+        <img id="currentWeatherIcon" src="" alt="Current Weather" class="mb-2">
+        <p class="display-1 currentTemp"></p>
+        <div class="currentDetails">Pressure: 994 | Humidity: 76°C</div>
+
+        <div class="modal-hourly-forecast mt-3">
+          <div class="hourly-forecast-item">Now <span class="hourly-temp">9.71°</span></div>
+        
+        </div>
+
+        <div class="modal-daily-forecast mt-3">
+          <div class="daily-forecast-item">Today <span class="daily-temp">10°</span></div>
+          <div class="daily-forecast-item">Tomorrow <span class="daily-temp">17°</span></div>
+          <div class="daily-forecast-item">Day after tomorrow <span class="daily-temp">13°</span></div>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-close-modal" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
     
    
