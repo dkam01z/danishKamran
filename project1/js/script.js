@@ -1,6 +1,7 @@
 const apiKey = "7b42934456e241e3b28e4b9a7bd9df33";
 const exchangeAPIKey = "554d89ca95967dd8c7a603a5";
 const weatherAPI = "107e1db8180a432d922171836242803";
+const newsApi = "bbe07a0f0321480888552a545dbaa8fb"
 
 $(window).on("load", function () {
   if ($("#preloader").length) {
@@ -420,8 +421,7 @@ function weatherData(capital) {
       var currentCondition = current.condition.text;
       var currentImg = current.condition.icon;
 
-      console.log(response)
-   
+    
       $('.cityTitle').text(`${city}, ${country}`);
       $('#currentWeatherIcon').attr('src', `https:${currentImg}`); 
       $('.currentTemp').text(`${currentTemp}°C`);
@@ -460,7 +460,7 @@ function updateWeatherBackground(description) {
     }
   }
 
-  $('.weather-content').css('background-image', `url('css/images/${backgroundImg}')`);
+  $('.weather-content').css('background-image', `url('img/${backgroundImg}')`);
 }
 
 
@@ -498,6 +498,53 @@ function nearbyWikipedia(east, west, north, south) {
     },
     error: function (error) {
       console.error(error);
+    }
+  });
+}
+
+
+function newsArticles(country) {
+  console.log(country);
+  $.ajax({
+    url: 'php/getNews.php',
+    method: "GET",
+    dataType: "JSON",
+    data: {
+      apiKey: newsApi,
+      country: country
+    },
+    success: function(response) {
+      console.log(response);
+      var articles = response.articles;
+      var listContainer = $('#newsArticlesList');
+      listContainer.empty();
+
+      var defaultNews = 'img/defaultNews.jpg'
+
+      articles.forEach(function(article) {
+        var author = article.author || 'Unknown author';
+        var title = article.title;
+        var url = article.url;
+        var imageUrl = article.urlToImage ? article.urlToImage : defaultNews;
+        var date = new Date(article.publishedAt).toLocaleString();
+        
+        var articleHtml = `
+          <div class="card mb-3">
+            <img src="${imageUrl}" class="card-img-top" alt="${title}">
+            <div class="text-center card-body">
+              <h5 class="card-title">${title}</h5>
+              <p class="card-text">${author}</p>
+              <p class="card-text"><small class="text-muted">Published on ${date}</small></p>
+              <a href="${url}" target="_blank" class="btn btn-primary">Read more</a>
+            </div>
+          </div>
+        `;
+
+        listContainer.append(articleHtml);
+      });
+    },
+    error: function(error) {
+      console.error("Error fetching news data: ", error);
     }
   });
 }
@@ -553,6 +600,7 @@ $(document).ready(function () {
           weatherObservations(east, west, north, south);
           getCountryInfo(selectedIso);
           nearbyWikipedia(east, west, north, south);
+          newsArticles(selectedIso)
         }
       }
     );
@@ -574,3 +622,8 @@ L.easyButton("fa-brands fa-wikipedia-w", function (btn, map) {
 L.easyButton("fa-solid fa-sun", function (btn, map) {
   $("#weatherModal").modal("show");
 }).addTo(map);
+
+L.easyButton("fa-solid fa-news", function (btn, map) {
+  $("#newsModal").modal("show");
+}).addTo(map);
+
