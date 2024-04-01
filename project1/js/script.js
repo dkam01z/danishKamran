@@ -368,6 +368,8 @@ function getCountryInfo(countryCode) {
     },
     success: function (response) {
       var data = response;
+
+      console.log(data);
       var countryName = data.name;
       var subRegion = data.subregion;
       var currency = data.currencies[0].name;
@@ -375,14 +377,16 @@ function getCountryInfo(countryCode) {
       var population = formatPopulation(data.population);
       var extensionCode = data.callingCodes;
       var capital = data.capital;
+      var flagImg = data.flags.svg
 
       $("#currencyCode").html(currencyCode);
-      $("#countryName").text(countryName);
+      $("#countryName").children().text(countryName).attr('href', `https://en.wikipedia.org/wiki/${countryName}`);
       $("#subRegion").text(subRegion);
       $("#currency").text(currency);
       $("#population").text(population);
       $("#capital").text(capital);
       $("#extensionCode").text("+" + extensionCode);
+      $('#flag').children().attr('src', `${flagImg}`); 
 
       $("#information").on("click", function () {
         $("#countryInfoModal").modal("show");
@@ -623,7 +627,7 @@ L.easyButton("fa-solid fa-sun", function (btn, map) {
   $("#weatherModal").modal("show");
 }).addTo(map);
 
-L.easyButton("fa-solid fa-news", function (btn, map) {
+L.easyButton("fa-solid fa-newspaper", function (btn, map) {
   $("#newsModal").modal("show");
 }).addTo(map);
 
