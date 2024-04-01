@@ -32,9 +32,29 @@ html, body{
  .blue {
     color: blue;
  }
-
  .weather-content {
     background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
- }
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative; /* Needed for positioning the pseudo-element */
+  }
+  
+  .weather-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay with 50% opacity */
+    z-index: 1; /* Ensures the overlay is above the background and below the content */
+  }
+  
+  /* Make sure content on top of the overlay is positioned relatively */
+  .weather-content .modal-header,
+  .weather-content .modal-body,
+  .weather-content .modal-footer {
+    position: relative;
+    z-index: 2; /* Ensures content is above the overlay */
+  }
+  

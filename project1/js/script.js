@@ -124,11 +124,13 @@ let markerLayers = {
   Weather_Observations: weather_Observations,
 };
 const weatherBackgrounds = {
-  'clear': 'clear.gif',
+  'clear': 'clear.jpg',
   'fog': 'fog.gif',
   'rain': 'rain.gif',
   'cloudy': 'clouds.gif',
+  'overcast': 'overcast.gif',
   'snow': 'snow.gif',
+  'sunny': 'sunny.gif'
   
 };
 
@@ -392,18 +394,20 @@ function getCountryInfo(countryCode) {
 }
 
 function weatherData(capital) {
+
+  var encodedCapital = encodeURIComponent(capital);
+
   $.ajax({
     url: 'php/getWeatherData.php',
     type: "GET",
     dataType: "JSON",
     data: {
-      capital: capital.replace(/'/g, "").normalize("NFD"),
+      capital: encodedCapital,
       apiKey: weatherAPI,
     },
     success: function(response) {
      
     
-      console.log(response)
       
       
       var location = response.location;
@@ -416,6 +420,7 @@ function weatherData(capital) {
       var currentCondition = current.condition.text;
       var currentImg = current.condition.icon;
 
+      console.log(response)
    
       $('.cityTitle').text(`${city}, ${country}`);
       $('#currentWeatherIcon').attr('src', `https:${currentImg}`); 
