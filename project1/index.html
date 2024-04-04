@@ -184,17 +184,21 @@
         <h3 class="currentCondition"></h3>
         <img id="currentWeatherIcon" src="" alt="Current Weather" class="mb-2">
         <p class="display-1 currentTemp"></p>
-        <div class="currentDetails">Pressure: 994 | Humidity: 76°C</div>
+        <div class="currentDetails">
+          Pressure: <span id="pressureValue"></span>mb |
+          Humidity: <span id="humidityValue"></span>
+        </div>
+        
 
         <div class="modal-hourly-forecast mt-3">
-          <div class="hourly-forecast-item">Now <span class="hourly-temp">9.71°</span></div>
+          <div >windspeed:  <span id="windspeed"></span></div>
         
         </div>
 
         <div class="modal-daily-forecast mt-3">
-          <div class="daily-forecast-item">Today <span class="daily-temp">10°</span></div>
-          <div class="daily-forecast-item">Tomorrow <span class="daily-temp">17°</span></div>
-          <div class="daily-forecast-item">Day after tomorrow <span class="daily-temp">13°</span></div>
+          <div class="daily-forecast-item">Today <span class="daily-temp"></span></div>
+          <div class="daily-forecast-item">Tomorrow <span class="daily-temp"></span></div>
+          <div class="daily-forecast-item">Day after tomorrow <span class="daily-temp"></span></div>
         </div>
       </div>
       <div class="modal-footer border-0">

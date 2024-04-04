@@ -369,7 +369,7 @@ function getCountryInfo(countryCode) {
     success: function (response) {
       var data = response;
 
-      console.log(data);
+     
       var countryName = data.name;
       var subRegion = data.subregion;
       var currency = data.currencies[0].name;
@@ -424,7 +424,7 @@ function weatherData(capital) {
       var currentTemp = current.temp_c;
       var currentCondition = current.condition.text;
       var currentImg = current.condition.icon;
-
+      console.log(response)
     
       $('.cityTitle').text(`${city}, ${country}`);
       $('#currentWeatherIcon').attr('src', `https:${currentImg}`); 
@@ -441,12 +441,18 @@ function weatherData(capital) {
         }
 
        
-        $(`#forecastDay${index} .forecastTemp`).text(`${day.day.avgtemp_c}°C`);
-        $(`#forecastDay${index} .forecastCondition`).text(day.day.condition.text);
-        $(`#forecastDay${index} .forecastIcon`).attr('src', `https:${day.day.condition.icon}`);
+        $('.cityTitle').text(`${city}, ${country}`);
+        $('#currentWeatherIcon').attr('src', `https:${currentImg}`);
+        $('.currentTemp').text(`${currentTemp}°C`);
+        $('.currentCondition').text(`${currentCondition}`);
+        $("#pressureValue").text(current.pressure_mb);
+        $("#humidityValue").text(current.humidity);
+        $('#windspeed').text(`${current.wind_kph} Kph`)
+     
+
+        $(`.modal-daily-forecast .daily-forecast-item:nth-child(${index}) .daily-temp`).text(`${forecast[index].day.avgtemp_c}°C`);
 
         
-      
       });
     },
     error: function(error) {
@@ -456,7 +462,7 @@ function weatherData(capital) {
 }
 
 function updateWeatherBackground(description) {
-  let backgroundImg = 'default.gif'; 
+  let backgroundImg = 'default.png'; 
   for (const [key, value] of Object.entries(weatherBackgrounds)) {
     if (description.toLowerCase().includes(key)) {
       backgroundImg = value;
@@ -508,7 +514,7 @@ function nearbyWikipedia(east, west, north, south) {
 
 
 function newsArticles(country) {
-  console.log(country);
+
   $.ajax({
     url: 'php/getNews.php',
     method: "GET",
@@ -518,7 +524,7 @@ function newsArticles(country) {
       country: country
     },
     success: function(response) {
-      console.log(response);
+      
       var articles = response.articles;
       var listContainer = $('#newsArticlesList');
       listContainer.empty();
