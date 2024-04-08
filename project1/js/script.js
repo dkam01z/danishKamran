@@ -325,6 +325,12 @@ function countryExchange(currencyCode) {
       var conversionRates = response.data.conversion_rates;
 
       $("#currencySelect").empty();
+
+      $("#currencySelect").append(
+        $("<option>").text("USD").attr("value", "USD")
+      );
+
+      
       $.each(conversionRates, function (code, rate) {
         $("#currencySelect").append(
           $("<option>").text(code).attr("value", code)
