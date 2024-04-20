@@ -208,7 +208,7 @@ function getCities(selectedIso) {
             "<div class='col text-center'><strong>" +
               cityName +
               "</strong><br><i>" +
-              "Population of " +
+               
               cityPopulation +
               "</i></div>",
             { direction: "top", sticky: true }
@@ -248,7 +248,7 @@ function getEarthQuakes(east, west, north, south) {
                 <h6 class='card-title text-primary'><strong>Recorded Earthquake</strong></h6>
                 <p class='card-text'>
                   <small class='text-muted'>On ${formattedTime}</small><br>
-                  <small>Measuring ${earthquakeMagnitude} on the Richter Scale</small>
+                  <small>${earthquakeMagnitude} Magnitude</small>
                 </p>
               </div>
             </div>`,
@@ -272,6 +272,7 @@ function weatherObservations(east, west, north, south) {
       south: south,
     },
     success: function (response) {
+      
       var weatherData = response.weatherObservations;
       for (let i = 0; i < weatherData.length; i++) {
         var weatherLat = weatherData[i].lat;
@@ -280,7 +281,8 @@ function weatherObservations(east, west, north, south) {
         var weatherTemp = weatherData[i].temperature;
         var weatherClouds = weatherData[i].clouds;
         var Observation = weatherData[i].observation;
-        var weatherDateTime = weatherData[i].datetime;
+        
+        var weatherDateTime = moment(weatherData[i].datetime).format("MMMM Do, YYYY")  ;
 
         L.marker([weatherLat, weatherLng], {
           icon: weatherIcon,
@@ -290,10 +292,10 @@ function weatherObservations(east, west, north, south) {
               <div class='card-body'>
                 <h6 class='card-title text-primary'><strong>${weatherStation}</strong></h6>
                 <p class='card-text'>
-                  <small class='text-muted'>Temperature: ${weatherTemp} °C</small><br>
-                  <small>Clouds: ${weatherClouds}</small><br>
+                  <small class='text-muted'>${weatherTemp} °C</small><br>
+                  <small>${weatherClouds}</small><br>
                   <small>Observation: ${Observation}</small><br>
-                  <small class='text-muted'>Observed: ${weatherDateTime}</small>
+                  <small class='text-muted'>${weatherDateTime}</small>
                 </p>
               </div>
             </div>`,
@@ -336,7 +338,7 @@ function countryExchange(currencyCode) {
           $("<option>").text(code).attr("value", code)
         );
       });
-
+      lastUpdated = moment(lastUpdated).format("MMMM Do, YYYY");
       $("#exchangeupdatedon").text(lastUpdated);
       $("#currencyExchangeCode").text(currencyCode);
 
@@ -518,6 +520,26 @@ function nearbyWikipedia(east, west, north, south) {
   });
 }
 
+function calculateDate(time) {
+  const date = new Date(time);
+  const secondsPast = (new Date() - date) / 1000;
+  let relativeTime = '';
+
+  if (secondsPast < 60) {
+    relativeTime = 'just now';
+  } else if (secondsPast < 3600) {
+    relativeTime = `${Math.floor(secondsPast / 60)} minutes ago`;
+  } else if (secondsPast < 86400) {
+    relativeTime = `${Math.floor(secondsPast / 3600)} hours ago`;
+  } else {
+    const days = Math.floor(secondsPast / 86400);
+    relativeTime = days === 1 ? `${days} day ago` : `${days} days ago`;
+  }
+
+  return relativeTime;
+}
+
+
 
 function newsArticles(country) {
 
@@ -542,17 +564,19 @@ function newsArticles(country) {
         var title = article.title;
         var url = article.url;
         var imageUrl = article.urlToImage ? article.urlToImage : defaultNews;
-        var date = new Date(article.publishedAt).toLocaleString();
+        var date = calculateDate(article.publishedAt)
+        console.log(date);
         
         var articleHtml = `
           <div class="card mb-3">
+            <a href="${url}" target="_blank">
             <img src="${imageUrl}" class="card-img-top" alt="${title}">
             <div class="text-center card-body">
               <h5 class="card-title">${title}</h5>
               <p class="card-text">${author}</p>
-              <p class="card-text"><small class="text-muted">Published on ${date}</small></p>
-              <a href="${url}" target="_blank" class="btn btn-primary">Read more</a>
+              <p class="card-text"><small class="text-muted">${date}</small></p>
             </div>
+            </a>
           </div>
         `;
 
@@ -566,8 +590,10 @@ function newsArticles(country) {
 }
 
 
+
+
 $(document).ready(function () {
-  $(".leaflet-control-custom").append($("#outside-buttons").children());
+  
 
   locateUser();
 
