@@ -45,58 +45,59 @@
  
 <!-- Modal -->
 <div class="modal fade" id="countryInfoModal" tabindex="-1" aria-labelledby="countryInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-      <div class="modal-content d-flex justify-content-center align-center">
-        <div class="modal-header">
-          <h5 class="modal-title" id="countryInfoModalLabel">Country Information</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <table class="table table-striped" id="countryInfoTable">
-            <tbody>
-              <tr >
-                <th>Name</th>
-                <td class="text-center"  id="countryName"><a target="_blank"></a></td>
-              </tr>
-              <tr>
-                <tr >
-                    <th>Capital</th>
-                    <td class="text-center"  id="capital"></td>
-                  </tr>
-                  <tr>
-                <th>Sub Region</th>
-                <td class="text-center" id="subRegion"></td>
-              </tr>
-              <tr>
-                <th>Currency</th>
-                <td class="text-center" id="currency"></td>
-              </tr>
-              <tr>
-                <th>Currency Code</th>
-                <td class="text-center" id="currencyCode"></td>
-              </tr>
-              <tr >
-                <th>Population</th>
-                <td class="text-center" id="population"></td>
-              </tr>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="countryInfoModalLabel">Country Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped" id="countryInfoTable">
+          <tbody>
+            <tr>
+              <th>Name</th>
+              <td id="countryName" class="text-end"><a target="_blank"></a></td>
+            </tr>
+            <tr>
+              <th>Capital</th>
+              <td id="capital" class="text-end"></td>
+            </tr>
+            <tr>
+              <th>Sub Region</th>
+              <td id="subRegion" class="text-end"></td>
+            </tr>
+            <tr>
+              <th>Currency</th>
+              <td id="currency" class="text-end"></td>
+            </tr>
+            <tr>
+              <th>Currency Code</th>
+              <td id="currencyCode" class="text-end"></td>
+            </tr>
+            <tr>
+              <th>Population</th>
+              <td id="population" class="text-end"></td>
+            </tr>
+            <tr>
               <th>Flag</th>
-              <td class="text-center"  id="flag">
+              <td id="flag" class="text-end">
                 <img id="flagSize" >
               </td>
             </tr>
-              <tr >
-                <th>Calling Code</th>
-                <td class="text-center"  id="extensionCode"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
+            <tr>
+              <th>Calling Code</th>
+              <td id="extensionCode" class="text-end"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
+</div>
+
   
   
     <div class="modal fade" id="exchangeRateModal" tabindex="-1" role="dialog" aria-labelledby="exchangeRateModalLabel" aria-hidden="true">
@@ -175,41 +176,41 @@
     
         
 
-<div class="modal fade" id="weatherModal" tabindex="-1" role="dialog" aria-labelledby="weatherModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content weather-content text-white">
-      <div class="modal-header border-0">
-        
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center">
-        <h2 class="cityTitle" id="weatherModalLabel"></h2>
-        <h3 class="currentCondition"></h3>
-        <img id="currentWeatherIcon" src="" alt="Current Weather" class="mb-2">
-        <p class="display-1 currentTemp"></p>
-        <div class="currentDetails">
-          Pressure: <span id="pressureValue"></span>mb |
-          Humidity: <span id="humidityValue"></span>
+    <div class="modal fade" id="weatherModal" tabindex="-1" aria-labelledby="weatherModalLabel" aria-hidden="true">
+      <div class=" rounded modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content weather-content">
+          <div class="modal-header text-white justify-content-between">
+            <h5 class="modal-title" id="weatherModalLabel"></h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4 text-white">
+            <div class="text-center">
+              <p class="lead fw-bold mb-0 currentDay">TODAY</p>
+              <p class="text-light small currentCondition"></p>
+              <div class="d-flex justify-content-center align-items-center">
+                <div>
+                  <img src="" alt="Weather Icon" class="weather-icon me-3" id="currentWeatherIcon">
+                </div>
+                <div>
+                  <p class="display-6 fw-bold mb-0 currentTemp"></p>
+                
+                </div>
+              </div>
+            </div>
+            <div class="row mt-4 daily-forecast-container">
+             
+            </div>
+          </div>
+          <div class="modal-footer ">
+            <div class="container text-center">
+              <p class="text-light small mb-0" id="lastUpdated"></p>
+            </div>
+          </div>
         </div>
-        
-
-        <div class="modal-hourly-forecast mt-3">
-          <div >windspeed:  <span id="windspeed"></span></div>
-        
-        </div>
-
-        <div class="modal-daily-forecast mt-3">
-          <div class="daily-forecast-item">Today <span class="daily-temp"></span></div>
-          <div class="daily-forecast-item">Tomorrow <span class="daily-temp"></span></div>
-          <div class="daily-forecast-item">Day after tomorrow <span class="daily-temp"></span></div>
-        </div>
-      </div>
-      <div class="modal-footer border-0">
-        <button type="button" class="btn btn-close-modal" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
-  </div>
-</div>
+    
+    
 
 <div class="modal fade" id="newsModal" tabindex="-1" aria-labelledby="newsModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg">

@@ -407,7 +407,6 @@ function getCountryInfo(countryCode) {
 }
 
 function weatherData(capital) {
-
   var encodedCapital = encodeURIComponent(capital);
 
   $.ajax({
@@ -419,55 +418,43 @@ function weatherData(capital) {
       apiKey: weatherAPI,
     },
     success: function(response) {
-     
-    
-      
-      
       var location = response.location;
       var current = response.current;
       var forecast = response.forecast.forecastday;
 
-      var country = location.country;
-      var city = location.name;
-      var currentTemp = current.temp_c;
-      var currentCondition = current.condition.text;
-      var currentImg = current.condition.icon;
-      console.log(response)
-    
-      $('.cityTitle').text(`${city}, ${country}`);
-      $('#currentWeatherIcon').attr('src', `https:${currentImg}`); 
-      $('.currentTemp').text(`${currentTemp}°C`);
-      $('.currentCondition').text(`${currentCondition}`);
+      $('#weatherModalLabel').text(`${location.name}, ${location.country}`);
+      $('#currentWeatherIcon').attr('src', `https:${current.condition.icon}`);
+      $('.currentTemp').text(`${Math.round(current.temp_c)}°C`);
+      $('.currentCondition').text(current.condition.text);
+      $('#lastUpdated').text(`Updated ${calculateDate(current.last_updated)}. Powered by WeatherAPI.com`);
 
-    
-      updateWeatherBackground(currentCondition.toLowerCase());
+      
+      $('.daily-forecast-container').empty();
 
-    
-      forecast.forEach((day, index) => {
-        if (index === 0) { 
-          return;
-        }
+      updateWeatherBackground(current.condition.text.toLowerCase());
 
-       
-        $('.cityTitle').text(`${city}, ${country}`);
-        $('#currentWeatherIcon').attr('src', `https:${currentImg}`);
-        $('.currentTemp').text(`${currentTemp}°C`);
-        $('.currentCondition').text(`${currentCondition}`);
-        $("#pressureValue").text(current.pressure_mb);
-        $("#humidityValue").text(current.humidity);
-        $('#windspeed').text(`${current.wind_kph} Kph`)
-     
+      for (let i = 1; i < forecast.length; i++) {
+        var dayForecast = forecast[i];
+        var dayElement = `
+          <div class="col">
+            <div class="text-center">
+              <p class="mb-0">${moment(dayForecast.date).format('ddd Do')}</p>
+              <img src="https:${dayForecast.day.condition.icon}" alt="Weather Icon" class="weather-icon-small mb-1">
+              <p class="mb-0">${Math.round(dayForecast.day.maxtemp_c)}°C</p>
+              <p class="text-white-50">${Math.round(dayForecast.day.mintemp_c)}°C</p>
+            </div>
+          </div>
+        `;
 
-        $(`.modal-daily-forecast .daily-forecast-item:nth-child(${index}) .daily-temp`).text(`${forecast[index].day.avgtemp_c}°C`);
-
-        
-      });
+        $('.daily-forecast-container').append(dayElement);
+      }
     },
     error: function(error) {
       console.error("Error fetching weather data: ", error);
     }
   });
 }
+
 
 function updateWeatherBackground(description) {
   let backgroundImg = 'default.png'; 
