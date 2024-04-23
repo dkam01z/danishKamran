@@ -3,15 +3,8 @@ const exchangeAPIKey = "554d89ca95967dd8c7a603a5";
 const weatherAPI = "107e1db8180a432d922171836242803";
 const newsApi = "bbe07a0f0321480888552a545dbaa8fb"
 
-$(window).on("load", function () {
-  if ($("#preloader").length) {
-    $("#preloader")
-      .delay(1000)
-      .fadeOut("slow", function () {
-        $(this).remove();
-      });
-  }
-});
+
+
 
 var defaultMap = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
@@ -161,6 +154,7 @@ function locateUser() {
       $.ajax({
         url: "php/getCountryName.php",
         type: "GET",
+       
         data: {
           lat: userLat,
           lon: userLng,
@@ -173,6 +167,10 @@ function locateUser() {
             data.features[0].properties.country_code.toUpperCase();
           $("#CountrySelect").val(countryIso).change();
         },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.error("AJAX error: " + textStatus + ' : ' + errorThrown);
+          alert("Error retrieving your location, please try again.");
+        }
       });
     })
     .on("locationerror", function (event) {
@@ -216,6 +214,10 @@ function getCities(selectedIso) {
           .addTo(cities);
       }
     },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error("AJAX error fetching cities data: " + textStatus + ' : ' + errorThrown);
+      alert('Error retrieving city data due to network error. Please try again.');
+    }
   });
 }
 
@@ -232,7 +234,7 @@ function getEarthQuakes(east, west, north, south) {
     },
 
     success: function (response) {
-      var data = response.earthquakes;
+      var data = response.data.earthquakes;
 
       for (let i = 0; i < data.length; i++) {
         let earthquakeLat = data[i].lat;
@@ -243,11 +245,10 @@ function getEarthQuakes(east, west, north, south) {
 
         L.marker([earthquakeLat, earthquakeLng], { icon: earthquakeIcon })
           .bindTooltip(
-            `<div class='bootstrap-tooltip card'>
+            `<div class=' card'>
               <div class='card-body'>
-                <h6 class='card-title text-primary'><strong>Recorded Earthquake</strong></h6>
                 <p class='card-text'>
-                  <small class='text-muted'>On ${formattedTime}</small><br>
+                  <small class='text-muted'>${formattedTime}</small><br>
                   <small>${earthquakeMagnitude} Magnitude</small>
                 </p>
               </div>
@@ -257,6 +258,10 @@ function getEarthQuakes(east, west, north, south) {
           .addTo(earthquakes);
       }
     },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error("AJAX error fetching earthquake data:", textStatus, errorThrown);
+      alert('Error retrieving earthquake data.');
+    }
   });
 }
 
@@ -273,7 +278,7 @@ function weatherObservations(east, west, north, south) {
     },
     success: function (response) {
       
-      var weatherData = response.weatherObservations;
+      var weatherData = response.data.weatherObservations;
       for (let i = 0; i < weatherData.length; i++) {
         var weatherLat = weatherData[i].lat;
         var weatherLng = weatherData[i].lng;
@@ -304,13 +309,16 @@ function weatherObservations(east, west, north, south) {
           .addTo(weather_Observations);
       }
     },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.error("Error fetching weather observations: ", textStatus, errorThrown);
+    }
   });
 }
 
 function updateConversionResult(conversionRate) {
   var amount = $("#fromamount").val();
   var calculateConversion = amount * conversionRate;
-  $("#exchangeresults").text(calculateConversion.toFixed(2)); // Show results with 2 decimal places
+  $("#exchangeresults").text(calculateConversion.toFixed(2)); 
 }
 
 function countryExchange(currencyCode) {
@@ -326,41 +334,50 @@ function countryExchange(currencyCode) {
       var lastUpdated = response.data.time_last_update_utc;
       var conversionRates = response.data.conversion_rates;
 
-      $("#currencySelect").empty();
-
-      $("#currencySelect").append(
-        $("<option>").text("USD").attr("value", "USD")
-      );
-
-      
+      var $currencySelect = $("#currencySelect");
+      $currencySelect.empty(); 
+  
       $.each(conversionRates, function (code, rate) {
-        $("#currencySelect").append(
+        $currencySelect.append(
           $("<option>").text(code).attr("value", code)
         );
       });
-      lastUpdated = moment(lastUpdated).format("MMMM Do, YYYY");
-      $("#exchangeupdatedon").text(lastUpdated);
-      $("#currencyExchangeCode").text(currencyCode);
 
-      $("#currencySelect").change(function () {
+ 
+      lastUpdated = calculateDate(lastUpdated);
+      $("#exchangeupdatedon").val(lastUpdated); 
+
+     
+      $('label[for="fromamount"]').text(currencyCode);
+
+      $currencySelect.on("change", function () {
         var selectedCurrency = $(this).val();
         var conversionRate = conversionRates[selectedCurrency];
         updateConversionResult(conversionRate);
       });
 
+      
       $("#fromamount").on("input", function () {
-        var selectedCurrency = $("#currencySelect").val();
+        var selectedCurrency = $currencySelect.val();
         var conversionRate = conversionRates[selectedCurrency];
         updateConversionResult(conversionRate);
       });
 
-      $("#currencySelect").trigger("change");
+    
+      $currencySelect.trigger("change");
     },
     error: function (error) {
       console.error(error);
     },
   });
 }
+
+function updateConversionResult(conversionRate) {
+  var amount = parseFloat($('#fromamount').val());
+  var result = amount * conversionRate;
+  $('#exchangeresults').val(result.toFixed(2));
+}
+
 
 function formatPopulation(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -403,6 +420,10 @@ function getCountryInfo(countryCode) {
       countryExchange(currencyCode);
       weatherData(capital);
     },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error("Error fetching country info:", textStatus, errorThrown);
+      alert('Failed to retrieve country data due to network error. Please try again.');
+    }
   });
 }
 
@@ -418,9 +439,10 @@ function weatherData(capital) {
       apiKey: weatherAPI,
     },
     success: function(response) {
-      var location = response.location;
-      var current = response.current;
-      var forecast = response.forecast.forecastday;
+  
+      var location = response.data.location;
+      var current = response.data.current;
+      var forecast = response.data.forecast.forecastday;
 
       $('#weatherModalLabel').text(`${location.name}, ${location.country}`);
       $('#currentWeatherIcon').attr('src', `https:${current.condition.icon}`);
@@ -449,8 +471,8 @@ function weatherData(capital) {
         $('.daily-forecast-container').append(dayElement);
       }
     },
-    error: function(error) {
-      console.error("Error fetching weather data: ", error);
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error("Error fetching weather data: ", textStatus, errorThrown);
     }
   });
 }
@@ -540,7 +562,7 @@ function newsArticles(country) {
     },
     success: function(response) {
       
-      var articles = response.articles;
+      var articles = response.data.articles;
       var listContainer = $('#newsArticlesList');
       listContainer.empty();
 
@@ -552,7 +574,7 @@ function newsArticles(country) {
         var url = article.url;
         var imageUrl = article.urlToImage ? article.urlToImage : defaultNews;
         var date = calculateDate(article.publishedAt)
-        console.log(date);
+       
         
         var articleHtml = `
           <div class="card mb-3">
@@ -570,8 +592,8 @@ function newsArticles(country) {
         listContainer.append(articleHtml);
       });
     },
-    error: function(error) {
-      console.error("Error fetching news data: ", error);
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error("Error fetching news data: ", textStatus, errorThrown);
     }
   });
 }
@@ -580,7 +602,12 @@ function newsArticles(country) {
 
 
 $(document).ready(function () {
-  
+
+  setTimeout(function() {
+    $("#preloader").fadeOut("slow", function() {
+        $(this).remove(); 
+    });
+  }, 1500); 
 
   locateUser();
 
@@ -592,6 +619,7 @@ $(document).ready(function () {
   });
 
   $("#CountrySelect").change(function () {
+    
     var selectedIso = $(this).val();
     polygonGroup.clearLayers();
     earthquakes.clearLayers();

@@ -20,7 +20,13 @@
 
 </head>
 <body>
+  
     
+  <div id="preloader" class="modal-backdrop show d-flex justify-content-center align-items-center">
+    <div class="spinner-border text-primary" role="status">
+    
+    </div>
+</div>
     <div class="map-container">
         
         <div class="dropdown-container">
@@ -40,7 +46,6 @@
 
      
 
-<div id="preloader"></div>
   
  
 <!-- Modal -->
@@ -98,60 +103,51 @@
   </div>
 </div>
 
-  
-  
-    <div class="modal fade" id="exchangeRateModal" tabindex="-1" role="dialog" aria-labelledby="exchangeRateModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="countryInfoModalLabel">Country Exchange</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <table class="table table-striped">
-                    <tbody><tr>
-                        <td>Updated On</td>
-                        <td id="exchangeupdatedon"></td>
-                    </tr>
-        
-                    <tr>
-                        <td>From</td>
-                        <td id="currencyExchangeCode"></td>
-                    </tr>
-        
-                    <tr>
-                        <td>Amount (from 1 to 1,000,000)</td>
-                        <td><input type="number" id="fromamount" name="fromamount" min="1" max="1000000" value="1" step="1" class="form-control"></td>
-                    </tr>
-        
-                    <tr>
-                        <td>Convert to</td>
-
-                        <td>
-                            <select  class="form-select" id="currencySelect">
-
-                            </select>
-                        </td>
-
-                        
-                    </tr>
-        
-                    <tr>
-                        <td>Result</td>
-                        <td id="exchangeresults"></td>
-                    </tr>
-                </tbody></table>
-        
-            
-                <div class="d-grid gap-2 d-flex justify-content-center">
-                    <button type="reset" class="btn btn-warning" id="exchangeclear">Clear</button>
-                </div>
-        
-            </div>
-                
-            </div>
+<div class="modal fade" id="exchangeRateModal" tabindex="-1" role="dialog" aria-labelledby="exchangeRateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="countryInfoModalLabel">Currency Calculator</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="currency-exchange-form" class="d-flex flex-column align-items-center">
+          
+          <div class="form-floating mb-3 w-75">
+            <input type="text" class="form-control" id="exchangeupdatedon" placeholder="Updated On" readonly>
+            <label for="exchangeupdatedon">Updated</label>
           </div>
+      
+          <div class="form-floating mb-3 w-75">
+            <input type="number" class="form-control" id="fromamount" name="fromamount" min="1" max="1000000" value="1" step="1">
+            <label for="fromamount"></label>
+          </div>
+      
+          <div class="form-floating mb-3 w-75">
+            <select class="form-select" id="currencySelect" aria-label="Convert to">
+              <option selected>USD</option>
+              
+            </select>
+            <label for="currencySelect">Convert to</label>
+          </div>
+      
+          <div class="form-floating mb-3 w-75">
+            <input type="text" class="form-control" id="exchangeresults" placeholder="Result" readonly>
+            <label for="exchangeresults">Result</label>
+          </div>
+      
+          <div class="d-grid gap-2 w-75">
+            <button type="reset" class="btn btn-warning" id="exchangeclear">Clear</button>
+          </div>
+      
+        </form>
+      </div>
     </div>
+  </div>
+</div>
+
+  
+    
     <div class="modal fade" id="wikipediaModal" tabindex="-1" role="dialog" aria-labelledby="wikipediaModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">

@@ -11,10 +11,25 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
 curl_setopt($ch, CURLOPT_URL, $url);
 
-
+if (curl_errno($ch)) {
+    $error_msg = curl_error($ch);
+    curl_close($ch);
+    die(json_encode(['error' => $error_msg]));
+}
 $result = curl_exec($ch); 
+curl_close($ch);
 
-curl_close($ch); 
+
+$decodedResult = json_decode($result, true);
+if (isset($decodedResult['error'])) {
+    $apiError = $decodedResult['error'];
+    die(json_encode(['error' => $apiError]));
+}
+
+
+
+
+
 
 $decodedResult = json_decode($result, true);
 

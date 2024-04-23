@@ -1,28 +1,52 @@
 <?php
 
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
 
-
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 
 $executionStartTime = microtime(true);
 
-// getting bounds from request variable
-$url = 'http://api.geonames.org/earthquakesJSON?&north=' . $_REQUEST['north'] . '&south=' . $_REQUEST['south'] . '&east=' . $_REQUEST['east'] . '&west=' . $_REQUEST['west'] . '&username=dkamran&style=full';
+$url = 'https://secure.geonames.org/earthquakesJSON?' .
+       'north=' . urlencode($_REQUEST['north']) .
+       '&south=' . urlencode($_REQUEST['south']) .
+       '&east=' . urlencode($_REQUEST['east']) .
+       '&west=' . urlencode($_REQUEST['west']) .
+       '&username=dkamran';
 
-// creating curl handle
-$ch = curl_init();
+$ch = curl_init($url);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-// makes the request to the API
-$result = curl_exec($ch); 
+$result = curl_exec($ch);
+if (curl_errno($ch)) {
+    echo json_encode([
+        'status' => 'error',
+        'message' => curl_error($ch),
+        'code' => curl_errno($ch)
+    ]);
+    curl_close($ch);
+    exit;
+}
 
-curl_close($ch); 
+curl_close($ch);
 
+$decoded = json_decode($result, true);
 
+if (json_last_error() !== JSON_ERROR_NONE) {
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Failed to parse JSON',
+        'code' => json_last_error()
+    ]);
+    exit;
+}
 
-echo $result; 
-
-
+echo json_encode([
+    'status' => 'success',
+    'data' => $decoded,
+    'executionTime' => microtime(true) - $executionStartTime
+]);
 
 ?>

@@ -14,6 +14,13 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_URL, $url);
 
 $result = curl_exec($ch);
+
+if (curl_errno($ch)) {
+    echo json_encode(['status' => 'error', 'message' => curl_error($ch)]);
+    curl_close($ch);
+    exit;
+}
+
 curl_close($ch);
 
 echo $result; 
