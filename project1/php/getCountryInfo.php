@@ -1,23 +1,31 @@
 <?php
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=UTF-8');
+header('Access-Control-Allow-Origin: *');
+
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
-$ch = curl_init();
-
 $url = 'https://restcountries.com/v2/alpha/' . urlencode($_REQUEST['countryCode']);
 
+$ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
 $result = curl_exec($ch);
 
-if (!$result) {
+if (curl_errno($ch)) {
     $error_msg = curl_error($ch);
+    $output['status']['code'] = "Failure";
+    $output['status']['name'] = "cURL Error";
+    $output['status']['description'] = $error_msg;
+    $output['data'] = null;
+    $output['status']['response'] = $executionTime;
+    echo json_encode($output);
     curl_close($ch);
-    echo json_encode(['error' => 'CURL error: ' . $error_msg]);
     exit;
 }
 
@@ -25,13 +33,25 @@ curl_close($ch);
 
 $decodedResult = json_decode($result, true);
 
-if (json_last_error() !== JSON_ERROR_NONE) {
-    echo json_encode(['error' => 'Failed to decode JSON']);
+if (!$decodedResult) {
+    $output['status']['code'] = "Failure";
+    $output['status']['name'] = "JSON Decoding Error";
+    $output['status']['description'] = "Failed to decode JSON";
+    $output['data'] = null;
+    $output['status']['response'] = $executionTime;
+    echo json_encode($output);
     exit;
 }
 
-echo $result; 
-
 $executionEndTime = microtime(true);
-$executionTime = ($executionEndTime - $executionStartTime) . ' seconds';
+$executionTime = ($executionEndTime - $executionStartTime);
+
+$output['status']['code'] = "Success";
+$output['status']['name'] = "API Call Successful";
+$output['status']['description'] = "Data retrieved successfully";
+$output['data'] = $decodedResult;
+$output['status']['response'] = $executionTime . ' seconds';
+
+echo json_encode($output); 
+
 ?>

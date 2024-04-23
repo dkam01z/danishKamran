@@ -192,7 +192,7 @@ function getCities(selectedIso) {
     },
 
     success: function (response) {
-      var responseData = response.geonames;
+      var responseData = response.data.geonames;
       for (let i = 0; i < responseData.length; i++) {
         let cityLat = responseData[i].lat;
         let cityLng = responseData[i].lng;
@@ -392,7 +392,7 @@ function getCountryInfo(countryCode) {
       countryCode: countryCode,
     },
     success: function (response) {
-      var data = response;
+      var data = response.data;
 
      
       var countryName = data.name;
@@ -504,7 +504,7 @@ function nearbyWikipedia(east, west, north, south) {
     dataType: "json",
     success: function (response) {
     
-        var geonames = response;
+        var geonames = response.data;
         const listContainer = $('#wikipediaArticlesList');
         listContainer.empty();
 
@@ -629,8 +629,9 @@ $(document).ready(function () {
     $.getJSON(
       "php/getCountryBorders.php",
       { isoCode: selectedIso },
-      function (selectedFeature) {
-        if (!selectedFeature.error) {
+      function (response) {
+        if (!response.error) {
+          var selectedFeature = response.data;
           var geometryType = selectedFeature.geometry.type;
           var coords = selectedFeature.geometry.coordinates;
           var latLngs = coords[0].map((coord) => [coord[1], coord[0]]);

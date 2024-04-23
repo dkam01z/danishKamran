@@ -1,6 +1,11 @@
 <?php
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=UTF-8');
+header('Access-Control-Allow-Origin: *');
+
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
+
 $executionStartTime = microtime(true);
 
 $apiKey = urlencode($_REQUEST['apiKey']);
@@ -13,28 +18,59 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 $result = curl_exec($ch);
 
-if (!$result) {
+if (curl_errno($ch)) {
     $error_msg = curl_error($ch);
     curl_close($ch);
-    echo json_encode(['error' => 'CURL error: ' . $error_msg]);
+
+    $output = [
+        'status' => [
+            'code' => "Failure",
+            'name' => "cURL Error",
+            'description' => $error_msg,
+            'response' => ''
+        ],
+        'data' => null
+    ];
+
+    echo json_encode($output);
     exit;
 }
 
 curl_close($ch);
 
 $decodedResult = json_decode($result, true);
+
 if (isset($decodedResult['error'])) {
-    echo json_encode(['error' => $decodedResult['error']]);
+    $output = [
+        'status' => [
+            'code' => "Failure",
+            'name' => "API Error",
+            'description' => $decodedResult['error'],
+            'response' => ''
+        ],
+        'data' => null
+    ];
+
+    echo json_encode($output);
     exit;
 }
 
-$countryCodes = array_keys($decodedResult['conversion_rates'] ?? []);
 $executionEndTime = microtime(true);
-$executionTime = $executionEndTime - $executionStartTime;
+$executionTime = number_format($executionEndTime - $executionStartTime, 3, '.', '');
 
-echo json_encode([
+$countryCodes = array_keys($decodedResult['conversion_rates'] ?? []);
+
+$output = [
+    'status' => [
+        'code' => "Success",
+        'name' => "API Call Successful",
+        'description' => "Data retrieved successfully",
+        'response' => $executionTime . ' seconds'
+    ],
     'countryCodes' => $countryCodes,
-    'data' => $decodedResult,
-    'executionTime' => $executionTime
-]);
+    'data' => $decodedResult
+];
+
+echo json_encode($output);
+
 ?>
