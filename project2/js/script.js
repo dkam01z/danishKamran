@@ -133,7 +133,7 @@ function renderLocation(locations) {
         success: function(response) {
            
             renderDepartment(response.data);
-            updateDepartmentDropdown(response.data);
+            updateDepartmentDropdown('#department', response.data);
         },
         error: function(jqXHR, textStatus, errorThrown) {
           console.error("Error fetching data: ", textStatus, errorThrown);
@@ -148,7 +148,7 @@ function renderLocation(locations) {
           txt: query,
         },
         success: function(response) {
-            updateLocations(response.data);
+            updateLocations('#location',response.data);
             renderLocation(response.data);
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -157,9 +157,9 @@ function renderLocation(locations) {
       });
   }
   
-  function updateDepartmentDropdown(departments) {
-    var $dropdown = $('#department'); 
-    $dropdown.empty(); 
+  function updateDepartmentDropdown(id, departments) {
+    var $dropdown = $(id); 
+    $dropdown.empty();
     $dropdown.append($('<option>').val("").text("Select a department").prop("disabled", true).prop("selected", true)); 
     $.each(departments, function(index, department) {
         var name = department.departmentName;
@@ -171,8 +171,8 @@ function renderLocation(locations) {
    
 }
 
-function updateLocations(locations) {
-    var $dropdown = $('#location'); 
+function updateLocations(id, locations) {
+    var $dropdown = $(id); 
     $dropdown.empty(); 
     $dropdown.append($('<option>').val("").text("Select a location").prop("disabled", true).prop("selected", true)); 
     $.each(locations, function(index, location) {
@@ -204,8 +204,141 @@ $("#refreshBtn").click(function () {
 });
 
 $("#filterBtn").click(function () {
-  // Open a modal of your own design that allows the user to apply a filter to the personnel table on either department or location
+  var activeTab = $('.nav-link.active').attr('id');
+  if (activeTab === 'personnelBtn') {
+    $('#filterPersonnelDeptModal').modal('show');
+} else if (activeTab === 'departmentsBtn') { 
+    $('#filterPersonnelDeptModal').modal('show');
+} else if (activeTab === 'locationsBtn') {    
+  $('#filterLocationModal').modal('show');
+}
 });
+
+$('#filterPersonnelDeptModal').on('show.bs.modal', function() {
+  $.ajax({
+      url: 'php/getAllDepartments.php',
+      data : {txt: ''},
+      type: "GET",
+      dataType: "json",
+      success: function(response) {
+       
+          if (response.status && response.status.code === "200") {
+              updateDepartmentDropdown('#filterDepartment', response.data);  
+          } else {
+              console.error('Failed to fetch departments:', response.status.description);
+          }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+          console.error("Error fetching departments: ", errorThrown);
+      }
+  });
+
+  $.ajax({
+    url: 'php/getAllLocations.php',
+    data : {txt: ''},
+    type: "GET",
+    dataType: "json",
+    success: function(response) {
+ 
+        if (response.status && response.status.code === "200") {
+            updateLocations('#filterLocation', response.data);  
+        } else {
+            console.error('Failed to fetch locations:', response.status.description);
+        }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        console.error("Error fetching locations: ", errorThrown);
+    }
+});
+});
+
+
+$('#filterLocationModal').on('show.bs.modal', function() {
+  $.ajax({
+    url: 'php/getAllLocations.php',
+    data : {txt: ''},
+    type: "GET",
+    dataType: "json",
+    success: function(response) {
+     
+        if (response.status && response.status.code === "200") {
+            updateLocations('#filterLocations', response.data);  
+        } else {
+            console.error('Failed to fetch locations:', response.status.description);
+        }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        console.error("Error fetching locations: ", errorThrown);
+    }
+});
+});
+
+$('#filterPersonnelDeptForm').on('submit', function(e) {
+  e.preventDefault();
+
+  var departmentID = $('#filterDepartment').val();
+  var locationID = $('#filterLocation').val();
+  var activeTab = $('.nav-link.active').attr('id');
+  var entity = activeTab === 'personnelBtn' ? 'Personnel' : activeTab === 'departmentsBtn' ? 'Department' : 'Location';
+
+  console.log(entity)
+
+  $.ajax({
+    url: `php/filter${entity}.php`,
+    data: { 
+      departmentID: departmentID,
+      locationID: locationID
+    },
+    type: "POST",
+    dataType: "json",
+    success: function(response) {
+      console.log(response)
+      if (response.status && response.status.code === "200") {
+        if (entity === 'Personnel') {
+          renderPersonnel(response.data);
+        } else if (entity === 'Department') {
+          renderDepartment(response.data);
+        }
+      } else {
+        $('#footerMessage').html(response.status.description)
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error("Error fetching: " + errorThrown);
+    }
+  });
+});
+
+$('#filterLocationForm').on('submit', function(e) {
+  e.preventDefault();
+
+  var locationID = $('#filterLocations').val();
+
+  console.log(locationID)
+
+  $.ajax({
+    url: `php/filterLocation.php`,
+    data: { 
+      locationID: locationID,
+    },
+    type: "POST",
+    dataType: "json",
+    success: function(response) {
+      console.log(response)
+      if (response.status && response.status.code === "200") {
+        renderLocation(response.data)
+      } else {
+        $('#footerMessage').html(response.status.description)
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error("Error fetching: " +  errorThrown);
+    }
+  });
+});
+
+
+
 
 $("#addBtn").click(function() {
     var activeTab = $('.nav-link.active').attr('id');
@@ -428,7 +561,7 @@ $("#addPersonnelForm").on("submit", function (e) {
     var jobTitle = $('#addPersonnelJobTitle').val();   
     var department = $('#department').val();
 
-    console.log(department)
+   
   
     $.ajax({
       url: "php/insertPersonnel.php",
@@ -442,7 +575,6 @@ $("#addPersonnelForm").on("submit", function (e) {
       success: function(response) {
        
           if (response.status.code === '200') {
-            console.log("success")
             $('#addEmployeeModal').modal('hide');
             $('#successModal').modal('show');
             fetchPersonnel();
@@ -596,7 +728,7 @@ $("#editDepartmentForm").on("submit", function (e) {
       },
 
       success: function(response) {
-          console.log(response);
+         
           if (response.status.code === '200') {
               
               $('#editDepartmentModal').modal('hide');

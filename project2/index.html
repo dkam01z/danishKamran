@@ -410,6 +410,62 @@
         </div>
       </div>
 
+      <div class="modal fade" id="filterPersonnelDeptModal" tabindex="-1" aria-labelledby="filterPersonnelDeptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary bg-gradient text-white">
+                    <h5 class="modal-title" id="filterPersonnelDeptModalLabel">Filter By</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="filterPersonnelDeptForm" method="post" >
+                      <div class="form-floating mb-3">
+                        <select class="form-select" id="filterDepartment">
+                       
+                        </select>
+                        <label for="filterDepartment">Department</label>
+                      </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="filterLocation">
+                            </select>
+                            <label for="location">Locations</label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-outline-primary btn-sm myBtn">Save</button>
+                            <p id="footerMessage"></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="filterLocationModal" tabindex="-1" aria-labelledby="filterLocationModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+              <div class="modal-header bg-primary bg-gradient text-white">
+                  <h5 class="modal-title" id="filterLocationModalLabel">Filter By</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="filterLocationForm" method="post" >
+                      <div class="form-floating mb-3">
+                          <select class="form-select" id="filterLocations">
+                          </select>
+                          <label for="filterLocations">Locations</label>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">Cancel</button>
+                          <button type="submit" class="btn btn-outline-primary btn-sm myBtn">Save</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
 
     
       <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
@@ -430,6 +486,8 @@
             </div>
         </div>
     </div>
+
+
 
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

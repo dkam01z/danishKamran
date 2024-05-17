@@ -44,8 +44,16 @@
 	$stmt = $conn->prepare($query);
 
 	if (!$stmt) {
-		
-		echo json_encode(['error' => 'Statement preparation failed: ' . $conn->error]);
+		$output = [
+			'status' => [
+				'code' => "500",
+				'name' => "error",
+				'description' => "Statement preparation failed: " . $conn->error
+			],
+			'data' => []
+		];
+		mysqli_close($conn);
+		echo json_encode($output);
 		exit;
 	}
 	
