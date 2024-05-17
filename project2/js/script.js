@@ -111,7 +111,7 @@ function renderLocation(locations) {
 
   function fetchPersonnel(query = '') {
     $.ajax({
-      url: "php/searchAll.php",
+      url: "php/getAll.php",
       data: {
         txt: query,
       },
@@ -281,7 +281,7 @@ $('#filterPersonnelDeptForm').on('submit', function(e) {
   var activeTab = $('.nav-link.active').attr('id');
   var entity = activeTab === 'personnelBtn' ? 'Personnel' : activeTab === 'departmentsBtn' ? 'Department' : 'Location';
 
-  console.log(entity)
+  
 
   $.ajax({
     url: `php/filter${entity}.php`,
@@ -292,7 +292,7 @@ $('#filterPersonnelDeptForm').on('submit', function(e) {
     type: "POST",
     dataType: "json",
     success: function(response) {
-      console.log(response)
+     
       if (response.status && response.status.code === "200") {
         if (entity === 'Personnel') {
           renderPersonnel(response.data);
@@ -312,9 +312,8 @@ $('#filterPersonnelDeptForm').on('submit', function(e) {
 $('#filterLocationForm').on('submit', function(e) {
   e.preventDefault();
 
-  var locationID = $('#filterLocations').val();
+  var locationID = $('#filterLocation').val();
 
-  console.log(locationID)
 
   $.ajax({
     url: `php/filterLocation.php`,
@@ -324,7 +323,7 @@ $('#filterLocationForm').on('submit', function(e) {
     type: "POST",
     dataType: "json",
     success: function(response) {
-      console.log(response)
+     
       if (response.status && response.status.code === "200") {
         renderLocation(response.data)
       } else {
@@ -477,7 +476,7 @@ $('#deleteModal').on('show.bs.modal', function (e) {
   var entity = trigger.data('entity');
   var name = trigger.data('name');
 
-  var entityName = entity === "personnel" ? "employee" : entity;
+  var entityName = entity === "Personnel" ? "employee" : entity;
   var message = `Are you sure you want to delete this ${entityName} named <strong>${name}</strong>?`;
   $('#deleteMessage').html(message);
   $('#confirmDelete').data('id', id).data('entity', entity);
@@ -486,6 +485,7 @@ $('#deleteModal').on('show.bs.modal', function (e) {
 $('#confirmDelete').click(function() {
   var id = $(this).data('id');
   var entity = $(this).data('entity');
+
 
   $.ajax({
       url: `php/delete${entity.charAt(0).toUpperCase() + entity.slice(1)}ByID.php`,
