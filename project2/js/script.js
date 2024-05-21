@@ -312,7 +312,7 @@ $('#filterPersonnelDeptForm').on('submit', function(e) {
 $('#filterLocationForm').on('submit', function(e) {
   e.preventDefault();
 
-  var locationID = $('#filterLocation').val();
+  var locationID = $('#filterLocations').val();
 
 
   $.ajax({
@@ -323,7 +323,7 @@ $('#filterLocationForm').on('submit', function(e) {
     type: "POST",
     dataType: "json",
     success: function(response) {
-     
+    
       if (response.status && response.status.code === "200") {
         renderLocation(response.data)
       } else {
