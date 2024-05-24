@@ -9,8 +9,10 @@
 
 	// database name, username and password
 
-	$cd_dbname = "u200883557_companydirect";
-	$cd_user = "u200883557_dkam01";
-	$cd_password = "Tissot011";
+	$cd_dbname = "companydirectory";
+	$cd_user = "";
+	$cd_password = "";
 
 ?>
+
+

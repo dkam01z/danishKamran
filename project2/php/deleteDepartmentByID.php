@@ -18,28 +18,6 @@ if (mysqli_connect_errno()) {
 
 $id = $_POST['id'];
 
-function hasDependencies($conn, $id) {
-    $query = $conn->prepare('SELECT COUNT(*) AS count FROM personnel WHERE departmentID = ?');
-    if ($query) {
-        $query->bind_param('i', $id);
-        $query->execute();
-        $query->bind_result($count);
-        $query->fetch();
-        $query->close();
-        return $count > 0;
-    } else {
-        error_log("SQL Error: " . $conn->error);
-        return null; 
-    }
-}
-
-$dependenciesExist = hasDependencies($conn, $id);
-
-if (is_null($dependenciesExist)) {
-    $output = ['status' => ['code' => "500", 'name' => "error", 'description' => "SQL Error: " . $conn->error], 'data' => []];
-} elseif ($dependenciesExist) {
-    $output = ['status' => ['code' => "400", 'name' => "executed", 'description' => "Deletion failed: Dependencies exist"], 'data' => []];
-} else {
     $query = $conn->prepare('DELETE FROM department WHERE id = ?');
     if ($query && $query->bind_param('i', $id) && $query->execute()) {
         $output = ['status' => ['code' => "200", 'name' => "ok", 'description' => "Department deleted successfully", 'returnedIn' => (microtime(true) - $executionStartTime) / 1000 . " ms"], 'data' => []];
@@ -47,7 +25,7 @@ if (is_null($dependenciesExist)) {
         $output = ['status' => ['code' => "500", 'name' => "error", 'description' => "Failed to delete department: " . $conn->error], 'data' => []];
     }
     $query ? $query->close() : null;
-}
+
 
 mysqli_close($conn);
 echo json_encode($output);

@@ -21,28 +21,8 @@ if (mysqli_connect_errno()) {
 }
 
 
-function hasDependencies($conn, $id) {
-    $stmt = $conn->prepare('SELECT COUNT(*) AS count FROM department WHERE locationID = ?');
-    $stmt->bind_param('i', $id);
-    $stmt->execute();
-    $stmt->bind_result($count);
-    $stmt->fetch();
-    $stmt->close();
-
-    return $count > 0;
-}
-
 $id = $_POST['id']; 
 
-if (hasDependencies($conn, $id)) {
-    $output = [
-        'status' => ['code' => "400", 'name' => "executed", 'description' => "Cannot delete, dependencies exist"], 
-        'data' => []
-    ];
-    mysqli_close($conn);
-    echo json_encode($output);
-    exit;
-} else {
     $query = $conn->prepare('DELETE FROM location WHERE id = ?');
     $query->bind_param('i', $id);
     if ($query->execute()) {
@@ -60,6 +40,6 @@ if (hasDependencies($conn, $id)) {
     mysqli_close($conn);
     echo json_encode($output);
     exit;
-}
+
 
 ?>
