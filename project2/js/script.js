@@ -82,6 +82,7 @@ setTimeout(function() {
                 if (result.status.code == 200) {
                     var personnel = result.data.personnel[0];
                     var name = personnel.firstName + ' ' + personnel.lastName;
+                    $('#deleteModalLabel').html('Remove employee?')
                     $('#deleteMessage').html(`Are you sure that you want to remove the entry for <strong>${name}</strong>?`);
                     $('#confirmDelete').data('id', id).data('entity', 'Personnel');
                     $("#deleteModal").modal("show");
@@ -164,6 +165,7 @@ function renderDepartment(departments) {
                             if (result.status.code == 200) {
                                 var department = result.data[0];
                                 var name = department.name;
+                                $('#deleteModalLabel').html('Remove department?')
                                 $('#deleteMessage').html(`Are you sure that you want to remove the entry for <strong>${name}</strong>?`);
                                 $('#confirmDelete').data('id', id).data('entity', 'Department');
                                 $("#deleteModal").modal("show");
@@ -178,9 +180,12 @@ function renderDepartment(departments) {
                         }
                     });
                 } else {
-                    var errorMessage = `Cannot remove the entry because it has dependencies.`;
-                    $('#errorMessage').html(errorMessage);
-                    $('#errorModal').modal('show');
+                  var name = result.data.name;
+                  var count = result.data.count;
+                  $('#errorModalLabel').html('Cannot remove department')
+                  var errorMessage = `Cannot remove the entry <b>${name}</b> because it has <b>${count}</b> dependencies.`;
+                  $('#errorMessage').html(errorMessage);
+                  $('#errorModal').modal('show');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -233,49 +238,57 @@ function renderLocation(locations) {
 
   $("#locationTableBody").append(frag);
 
-    $(".deleteLocationBtn").click(function () {
-        var id = $(this).data("id");
-        $.ajax({
-            url: `php/checkDependencies.php`,
-            type: "POST",
-            dataType: "json",
-            data: { id: id, entity: 'Location' },
-            success: function (result) {
-                if (result.status.code == 200) {
-                    $.ajax({
-                        url: `php/getLocationByID.php`,
-                        type: "POST",
-                        dataType: "json",
-                        data: { id: id },
-                        success: function (result) {
-                            if (result.status.code == 200) {
-                                var location = result.data[0];
-                                var name = location.name;
-                                $('#deleteMessage').html(`Are you sure that you want to remove the entry for <strong>${name}</strong>?`);
-                                $('#confirmDelete').data('id', id).data('entity', 'Location');
-                                $("#deleteModal").modal("show");
-                            } else {
-                                $("#errorMessage").text("Error retrieving data");
-                                $("#errorModal").modal("show");
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
+
+  $(".deleteLocationBtn").click(function () {
+    var id = $(this).data("id");
+    $.ajax({
+        url: `php/checkDependencies.php`,
+        type: "POST",
+        dataType: "json",
+        data: { id: id, entity: 'Location' },
+        success: function (result) {
+         
+            if (result.status.code == 200) {
+                $.ajax({
+                    url: `php/getLocationByID.php`,
+                    type: "POST",
+                    dataType: "json",
+                    data: { id: id },
+                    success: function (result) {
+                        if (result.status.code == 200) {
+                            var location = result.data[0];
+                            var name = location.name;
+                            $('#deleteModalLabel').html('Remove location?')
+                            $('#deleteMessage').html(`Are you sure that you want to remove the entry for <strong>${name}</strong>?`);
+                            $('#confirmDelete').data('id', id).data('entity', 'Location');
+                            $("#deleteModal").modal("show");
+                        } else {
                             $("#errorMessage").text("Error retrieving data");
                             $("#errorModal").modal("show");
                         }
-                    });
-                } else {
-                    var errorMessage = `Cannot remove the entry because it has dependencies.`;
-                    $('#errorMessage').html(errorMessage);
-                    $('#errorModal').modal('show');
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                $("#errorMessage").text("Error checking dependencies");
-                $("#errorModal").modal("show");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("#errorMessage").text("Error retrieving data");
+                        $("#errorModal").modal("show");
+                    }
+                });
+            } else {
+                var name = result.data.name;
+                var count = result.data.count;
+                $('#errorModalLabel').html('Cannot remove location')
+                var errorMessage = `Cannot remove the entry <b>${name}</b> because it has <b>${count}</b> dependencies.`;
+                $('#errorMessage').html(errorMessage);
+                $('#errorModal').modal('show');
             }
-        });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            $("#errorMessage").text("Error checking dependencies");
+            $("#errorModal").modal("show");
+        }
     });
+});
+
+
 }
 
 $('#confirmDelete').click(function() {
@@ -362,28 +375,28 @@ function deleteEntity(id, entity) {
       });
   }
   
- function updateDepartmentDropdown(id, departments) {
-    var $dropdown = $(id); 
+  function updateDepartmentDropdown(id, departments) {
+    var $dropdown = $(id);
     $dropdown.empty();
-    $dropdown.append($('<option>').val("").text("All").prop("disabled", false).prop("selected", true)); 
+    $dropdown.append($('<option>').val("").text("All").prop("disabled", false).prop("selected", true));
     $.each(departments, function(index, department) {
-      var name = department.departmentName;
-      var id = department.id
-      $dropdown.append(new Option(name, id));
+        var name = department.departmentName;
+        var id = department.id;
+        $dropdown.append(new Option(name, id));
     });
-  }
+}
 
-  function updateLocations(id, locations) {
-    var $dropdown = $(id); 
-    $dropdown.empty(); 
-    $dropdown.append($('<option>').val("").text("All").prop("disabled", false).prop("selected", true)); 
+
+function updateLocations(id, locations) {
+    var $dropdown = $(id);
+    $dropdown.empty();
+    $dropdown.append($('<option>').val("").text("All").prop("disabled", false).prop("selected", true));
     $.each(locations, function(index, location) {
-      var name = location.name;
-      var id = location.id;
-      $dropdown.append(new Option(name, id));
+        var name = location.name;
+        var id = location.id;
+        $dropdown.append(new Option(name, id));
     });
-  }
-
+}
 
   $("#searchInp").on("keyup", function () {
     let query = this.value; 
@@ -426,7 +439,6 @@ var lastSelectedLocation = localStorage.getItem('lastSelectedLocation') || '';
 $('#filterDepartment').on('change', function() {
   $('#filterLocation').val('');
   lastSelectedDepartment = $(this).val();
-  console.log(lastSelectedDepartment)
   localStorage.setItem('lastSelectedDepartment', lastSelectedDepartment);
 });
 
@@ -439,49 +451,54 @@ $('#filterLocation').on('change', function() {
 
 $('#filterPersonnelDeptModal').on('show.bs.modal', function() {
   if (lastSelectedDepartment) {
-    $('#filterDepartment').val(lastSelectedDepartment);
+      $('#filterDepartment').val(lastSelectedDepartment);
   }
   if (lastSelectedLocation) {
-    $('#filterLocation').val(lastSelectedLocation);
+      $('#filterLocation').val(lastSelectedLocation);
   }
 
 
-
   $.ajax({
-    url: 'php/getAllLocations.php',
-    data : {txt: ''},
-    type: "GET",
-    dataType: "json",
-    success: function(response) {
-      if (response.status && response.status.code === "200") {
-        updateLocations('#filterLocation', response.data);  
-      } else {
-        console.error('Failed to fetch locations:', response.status.description);
+      url: 'php/getAllLocations.php',
+      data: {txt: ''},
+      type: "GET",
+      dataType: "json",
+      success: function(response) {
+          if (response.status && response.status.code === "200") {
+              updateLocations('#filterLocation', response.data);
+              if (lastSelectedLocation) {
+                  $('#filterLocation').val(lastSelectedLocation);
+              }
+          } else {
+              console.error('Failed to fetch locations:', response.status.description);
+          }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+          console.error("Error fetching locations: ", errorThrown);
       }
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.error("Error fetching locations: ", errorThrown);
-    }
   });
 
+ 
   $.ajax({
-    url: 'php/getAllDepartments.php',
-    data : {txt: ''},
-    type: "GET",
-    dataType: "json",
-    success: function(response) {
-      if (response.status && response.status.code === "200") {
-        updateDepartmentDropdown('#filterDepartment', response.data);  
-      } else {
-        console.error('Failed to fetch departments:', response.status.description);
+      url: 'php/getAllDepartments.php',
+      data: {txt: ''},
+      type: "GET",
+      dataType: "json",
+      success: function(response) {
+          if (response.status && response.status.code === "200") {
+              updateDepartmentDropdown('#filterDepartment', response.data);
+              if (lastSelectedDepartment) {
+                  $('#filterDepartment').val(lastSelectedDepartment);
+              }
+          } else {
+              console.error('Failed to fetch departments:', response.status.description);
+          }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+          console.error("Error fetching departments: ", errorThrown);
       }
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.error("Error fetching departments: ", errorThrown);
-    }
   });
 });
-
 
 $('#filterLocationModal').on('show.bs.modal', function() {
   $.ajax({

@@ -11,7 +11,12 @@ $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_s
 
 if (mysqli_connect_errno()) {
     $output = [
-        'status' => ['code' => "300", 'name' => "failure", 'description' => "database unavailable", 'returnedIn' => (microtime(true) - $executionStartTime) / 1000 . " ms"], 
+        'status' => [
+            'code' => "300",
+            'name' => "failure",
+            'description' => "database unavailable",
+            'returnedIn' => (microtime(true) - $executionStartTime) / 1000 . " ms"
+        ],
         'data' => []
     ];
     mysqli_close($conn);
@@ -22,7 +27,7 @@ if (mysqli_connect_errno()) {
 $id = $_POST['id'];
 $entity = $_POST['entity'];
 
-function hasDependencies($conn, $id, $entity) {
+function hasDependencies($conn, $id, $entity, &$count) {
     if ($entity === 'Department') {
         $stmt = $conn->prepare('SELECT COUNT(personnel.id) AS count FROM personnel WHERE departmentID = ?');
     } else if ($entity === 'Location') {
@@ -40,15 +45,36 @@ function hasDependencies($conn, $id, $entity) {
     return $count > 0;
 }
 
-if (hasDependencies($conn, $id, $entity)) {
+$count = 0;
+if (hasDependencies($conn, $id, $entity, $count)) {
+    $stmt = $conn->prepare('SELECT name FROM ' . strtolower($entity) . ' WHERE id = ?');
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $stmt->bind_result($name);
+    $stmt->fetch();
+    $stmt->close();
+
     $output = [
-        'status' => ['code' => "400", 'name' => "executed", 'description' => "Cannot delete, dependencies exist"], 
-        'data' => []
+        'status' => [
+            'code' => "400",
+            'name' => "executed",
+            'description' => "Cannot delete, dependencies exist"
+        ],
+        'data' => [
+            'name' => $name,
+            'count' => $count
+        ]
     ];
 } else {
     $output = [
-        'status' => ['code' => "200", 'name' => "ok", 'description' => "No dependencies found"], 
-        'data' => []
+        'status' => [
+            'code' => "200",
+            'name' => "ok",
+            'description' => "No dependencies found"
+        ],
+        'data' => [
+            'count' => $count
+        ]
     ];
 }
 
