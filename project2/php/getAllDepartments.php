@@ -33,7 +33,7 @@
 	}	
 
 
-	// SQL does not accept parameters and so is not prepared
+
 
 	$query = 'SELECT d.id, d.name as departmentName, l.name as locationName 
           FROM department d 
