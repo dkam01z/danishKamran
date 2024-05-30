@@ -421,24 +421,15 @@ $("#filterBtn").click(function() {
 
 
 
-var lastSelectedDepartment = '';
-var lastSelectedLocation = '';
 
 $('#filterDepartment').on('change', function() {
   $('#filterLocation').val('');
-  lastSelectedDepartment = $(this).val();
+
 });
 
 $('#filterLocation').on('change', function() {
   $('#filterDepartment').val('');
-  lastSelectedLocation = $(this).val();
 });
-
-$('#filterLocations').on('change', function() {
-  $('#filterDepartment').val('');
-  lastSelectedLocation = $(this).val();
-});
-
 
 
 $('#filterPersonnelDeptModal').on('show.bs.modal', function() {
@@ -500,7 +491,7 @@ $('#filterLocationModal').on('show.bs.modal', function() {
     success: function(response) {
       if (response.status && response.status.code === "200") {
         updateLocations('#filterLocations', response.data);
-        $('#filterLocations').val(currentFilterLocationSelect); // Restore the selected value
+        $('#filterLocations').val(currentFilterLocationSelect); 
       } else {
         console.error('Failed to fetch locations:', response.status.description);
       }
